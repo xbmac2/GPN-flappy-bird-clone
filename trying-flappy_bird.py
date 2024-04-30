@@ -1,10 +1,11 @@
 # This is a comment! My name is Xandra!
 from pygame import *
+from random import *
+
 init()
 
 print("""
       The game is about to start!
-      You can move the bird up and down using the arrow keys
       Dodge the pipes to win
       Good luck!
       """)
@@ -21,32 +22,45 @@ bird_y = 250
 
 pipe_x = 200
 pipe_y = 250
+pipe_flipped = False
 pipe2_x = 450
 pipe2_y = 100
-pipe3_x = 700
+pipe2_flipped = False
+# adjusted the distance to next hanging pipe
+pipe3_x = 760
 pipe3_y = 400
+pipe3_flipped = True
 
 while True:
 
     new_event = event.poll()
     if new_event.type == KEYDOWN and new_event.key == K_UP:
-        print("Going up")
         bird_y = bird_y - 50
     if new_event.type == KEYDOWN and new_event.key == K_DOWN:
-        print("Going down")
         bird_y = bird_y + 50
-    if new_event.type == KEYDOWN and new_event.key == K_LEFT:
-        print("Going left")
-        bird_x = bird_x - 50
-    if new_event.type == KEYDOWN and new_event.key == K_RIGHT:
-        print("Going up")
-        bird_x = bird_x + 50
+
+    pipe_x = pipe_x - 2
+    pipe2_x = pipe2_x - 2
+    pipe3_x = pipe3_x - 2
 
     background = screen.blit(background_image, (0, 0))
     bird = screen.blit(bird_image, (bird_x, bird_y))
-    pipe = screen.blit(pipe_bottom_image, (pipe_x, pipe_y))
-    pipe2 = screen.blit(pipe_bottom_image, (pipe2_x, pipe2_y))
-    pipe3 = screen.blit(pipe_top_image, (pipe3_x, -pipe3_y))
+
+    if pipe_flipped:
+        pipe = screen.blit(pipe_top_image, (pipe_x, -pipe_y))
+    else:
+        pipe = screen.blit(pipe_bottom_image, (pipe_x, pipe_y))
+
+    if pipe2_flipped:
+        pipe2 = screen.blit(pipe_top_image, (pipe2_x, -pipe2_y))
+    else:
+        pipe2 = screen.blit(pipe_bottom_image, (pipe2_x, pipe2_y))
+
+    if pipe3_flipped:
+        pipe3 = screen.blit(pipe_top_image, (pipe3_x, -pipe3_y))
+    else:
+        pipe3 = screen.blit(pipe_bottom_image, (pipe3_x, pipe3_y))
+    
 
     display.update()
 
@@ -66,9 +80,17 @@ while True:
         quit()
         break
 
-    if bird_x >= 800:
-        print("Winner!")
-        quit()
-        break
+    if pipe_x < -87:
+        pipe_x = 800
+        pipe_y = randint(100, 500)
+        pipe_flipped = choice([True, False])
 
+    if pipe2_x < -87:
+        pipe2_x = 800
+        pipe2_y = randint(100, 500)
+        pipe2_flipped = choice([True, False])
 
+    if pipe3_x < -87:
+        pipe3_x = 800
+        pipe3_y = randint(100, 500)
+        pipe3_flipped = choice([True, False])
