@@ -13,7 +13,11 @@ print("""
 screen = display.set_mode((800, 600))
 
 background_image = image.load("bg.png")
-bird_image = image.load("bird.png")
+
+bird_wings_up_image = image.load("bird_wingsup.png")
+bird_wings_down_image = image.load("bird_wingsdown.png")
+# bird_image = image.load("bird.png")
+
 pipe_top_image = image.load("top.png")
 pipe_bottom_image = image.load("bottom.png")
 
@@ -31,6 +35,9 @@ pipe3_x = 760
 pipe3_y = 400
 pipe3_flipped = True
 
+wing_position = "up"
+count = 0
+
 while True:
 
     new_event = event.poll()
@@ -43,8 +50,23 @@ while True:
     pipe2_x = pipe2_x - 2
     pipe3_x = pipe3_x - 2
 
+    # adds gravity
+    bird_y = bird_y + 1
+
     background = screen.blit(background_image, (0, 0))
-    bird = screen.blit(bird_image, (bird_x, bird_y))
+    # bird = screen.blit(bird_image, (bird_x, bird_y))
+    if wing_position == "up":
+        bird = screen.blit(bird_wings_up_image, (bird_x, bird_y))
+        count += 1
+        if count > 10:
+            wing_position = "down"
+            count = 0
+    elif wing_position == "down":
+        bird = screen.blit(bird_wings_down_image, (bird_x, bird_y))
+        count += 1
+        if count > 10:
+            wing_position = "up"
+            count = 0
 
     if pipe_flipped:
         pipe = screen.blit(pipe_top_image, (pipe_x, -pipe_y))
